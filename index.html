@@ -15,8 +15,8 @@
     font:14px/1.5 "Pretendard","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;min-height:100vh;overflow-x:clip}
   button{font:inherit;color:inherit;cursor:pointer}
   button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-  .wrap{max-width:1180px;margin:0 auto;padding:12px 12px 28px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .wrap{max-width:1500px;margin:0 auto;padding:8px 14px 10px;height:100vh;height:100dvh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap;flex:none}
   h1{font-size:19px;margin:0}
   h1 small{color:var(--muted);font-weight:500;font-size:13px;margin-left:8px}
   .badges{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -26,18 +26,21 @@
   .toggle.on{color:var(--text);border-color:var(--blue);background:#5aa7e822}
 
   /* ---------- top: inspect / clash panel ---------- */
-  .top{background:linear-gradient(180deg,#1f1b28,#17151d);border:1px solid var(--line);border-radius:14px 14px 0 0;
-    height:150px;overflow:hidden;padding:10px 14px;display:flex;align-items:center}
+  .top{background:linear-gradient(180deg,#1f1b28,#17151d);border:1px solid var(--line);border-radius:14px 14px 0 0;flex:none;
+    height:124px;overflow:hidden;padding:10px 14px;display:flex;align-items:center}
   .top > *{width:100%}
   .idle{text-align:center;color:var(--muted);font-size:13px}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);gap:10px;align-items:center}
-  .si{background:#0f0e14;border:1px solid var(--line);border-left:3px solid var(--c,var(--blue));border-radius:10px;padding:8px 10px;min-height:96px}
+  .si{background:#0f0e14;border:1px solid var(--line);border-left:3px solid var(--c,var(--blue));border-radius:10px;padding:6px 10px;min-height:92px}
+  .cr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px}
+  .cr .coins{margin-top:0}
+  .si.r .cr{flex-direction:row-reverse}
   .si.r{border-left:1px solid var(--line);border-right:3px solid var(--red);text-align:right}
   .si.r .coins{justify-content:flex-end}
   .si.empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12.5px;border-style:dashed}
   .si .un{font-size:12px;font-weight:700;color:var(--c,var(--blue))}
   .si.r .un{color:#f09a9d}
-  .si .sn{font-size:16px;font-weight:800;margin:1px 0}
+  .si .sn{font-size:15px;font-weight:800;margin:0}
   .si .sm{font-size:12px;color:var(--muted)}
   .verdict{text-align:center}
   .verdict .big{font-size:30px;font-weight:800;line-height:1.1}
@@ -50,13 +53,14 @@
   .cnote b{color:var(--text)}
 
   /* ---------- stage ---------- */
-  .stage{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:96px 18px 18px;min-height:330px;
+  .stage{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:clamp(52px,9vh,90px) 18px 6px;flex:1;min-height:200px;
     background:radial-gradient(70% 60% at 50% 80%,#3a2018 0%,#1d1512 55%,#141014 100%);border-left:1px solid var(--line);border-right:1px solid var(--line)}
   #arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
-  .side{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 8px;align-content:end;position:relative;z-index:2}
-  .side.a .tok:nth-child(n+4){transform:translateX(18%)}
-  .side.e .tok:nth-child(n+4){transform:translateX(-18%)}
-  .side.e.boss{grid-template-columns:1fr;justify-items:center}
+  .side{display:flex;justify-content:space-evenly;align-items:flex-end;gap:4px;position:relative;z-index:2;padding-bottom:4px}
+  .side .tok{flex:1 1 0;max-width:120px}
+  .side .tok:nth-child(odd){margin-bottom:clamp(10px,4vh,52px)}
+      .side.e.boss{justify-content:center}
+  .side.e.boss .tok{max-width:none;margin-bottom:0}
   .tok{display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
   .tok.dead{opacity:.28}
   .chips{display:flex;gap:4px;min-height:30px;align-items:center;flex-wrap:wrap;justify-content:center}
@@ -67,11 +71,11 @@
   .chip.e.pick{animation:pulse 1s infinite}
   .chip.none{border-color:#555;color:#777;background:#1a1a1a}
   @keyframes pulse{50%{box-shadow:0 0 0 5px #5aa7e855}}
-  .body{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;
+  .body{width:clamp(40px,8vh,60px);height:clamp(40px,8vh,60px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;
     color:#111;background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),var(--c);box-shadow:0 8px 14px #0008}
   .tok.e .body{border-radius:12px;background:radial-gradient(circle at 35% 30%,#fff5,transparent 45%),linear-gradient(150deg,#e46a63,#8f2638);color:#fff;
     clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
-  .boss .tok.e .body{width:120px;height:120px;font-size:38px}
+  .boss .tok.e .body{width:clamp(70px,15vh,124px);height:clamp(70px,15vh,124px);font-size:38px}
   .tok.armed .body{box-shadow:0 0 0 3px var(--blue),0 8px 14px #0008}
   .tn{font-size:12px;font-weight:700;white-space:nowrap}
   .tag{font-size:10px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-weight:600}
@@ -86,17 +90,19 @@
 
   /* ---------- bottom skill bar ---------- */
   .skillbar{display:grid;grid-template-columns:repeat(var(--n,5),minmax(118px,1fr));gap:8px;background:#16141c;border:1px solid var(--line);
-    border-radius:0 0 14px 14px;padding:10px;overflow-x:auto}
+    border-radius:0 0 14px 14px;padding:8px 10px;overflow-x:auto;flex:none}
   .col{display:flex;flex-direction:column;gap:5px;border-top:3px solid var(--c);padding-top:6px}
   .ch{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;gap:4px}
   .ch .spd{color:var(--gold);font-size:11.5px;white-space:nowrap}
   .dot{width:10px;height:10px;border-radius:50%;background:var(--c);display:inline-block;margin-right:5px;vertical-align:0}
   .tile{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 7px;text-align:left;display:grid;
-    grid-template-columns:1fr auto;gap:0 4px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;min-height:44px}
+    grid-template-columns:1fr auto;gap:0 4px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;min-height:40px;padding:4px 7px}
   .tile:hover:not(:disabled){border-color:var(--blue)}
   .tile.sel{border-color:var(--blue);background:#5aa7e826}
   .tile:disabled{opacity:.45;cursor:default}
-  .tile.g{min-height:34px}
+  .tile.g{min-height:28px;padding:3px 7px}
+  .tile.g .trg{display:none}
+  .tile.g .tnm::after{content:attr(data-g);font-weight:500;color:var(--muted);font-size:11px;margin-left:6px}
   .tile.g .tnm{color:var(--shield)}
   .tile.off{color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center}
   .tnm{font-weight:700;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -119,14 +125,15 @@
   .coin.flip{animation:flip .3s}
   @keyframes flip{50%{transform:rotateY(90deg) scale(1.1)}}
 
-  .ctrl{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .ctrl{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap;margin-top:8px;flex:none}
+  .ctrl .hint{margin-right:auto}
   .btn{background:var(--blue);border:none;border-radius:10px;padding:9px 16px;font-weight:700;color:#0d1520;min-height:42px}
   .btn:disabled{opacity:.4;cursor:default}
   .btn.ghost{background:none;border:1px solid var(--line);color:var(--text)}
   .btn.start{background:var(--gold);color:#2b2208;min-width:120px}
-  .hint{text-align:center;font-size:12px;color:var(--muted);margin-top:6px;min-height:18px}
+  .hint{font-size:12.5px;color:var(--muted)}
 
-  .log{margin-top:12px;background:#0f0e14;border:1px solid var(--line);border-radius:12px;padding:9px 12px;height:140px;overflow:auto;font-size:12.5px;line-height:1.6;color:#cfc9dc}
+  .log{position:fixed;right:14px;bottom:70px;width:min(420px,calc(100vw - 28px));z-index:8;box-shadow:0 10px 30px #000a;background:#0f0e14;border:1px solid var(--line);border-radius:12px;padding:9px 12px;height:min(320px,50vh);overflow:auto;font-size:12.5px;line-height:1.6;color:#cfc9dc}
   .log .t{color:var(--muted)} .log .good{color:var(--green)} .log .bad{color:var(--red)} .log .ub{color:var(--ub)}
 
   .float{position:absolute;font-weight:800;font-size:17px;pointer-events:none;animation:up .9s forwards;z-index:5;text-shadow:0 2px 4px #000;top:30px}
@@ -159,15 +166,21 @@
   .stat .k{font-size:12px;color:var(--muted)} .stat .v{font-size:19px;font-weight:800;margin-top:2px}
   .hidden{display:none!important}
   @media (prefers-reduced-motion:reduce){.coin.flip,.hit .body,.float,.chip.e.pick{animation:none}}
+  .btn{min-height:38px;padding:7px 14px}
+  @media (max-height:640px) and (min-width:701px){.top{height:104px}.si{min-height:84px}.coins{margin-top:2px}.coin{width:18px;height:18px}}
   @media (max-width:700px){
-    .top{height:232px;padding:8px}
+    .wrap{height:auto}
+    .stage{min-height:300px}
+    .top{height:220px;padding:8px}
+    .si .cr{flex-direction:column;align-items:flex-start}.si.r .cr{align-items:flex-end;flex-direction:column}
     .si{padding:6px 7px}.si .sm{font-size:11px}
     .duo{grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr)}
     .verdict .big,.pow{font-size:22px}
     .si .sn{font-size:14px}
     .stage{gap:10px;padding:84px 8px 12px}
-    .side{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .side.a .tok:nth-child(n+4),.side.e .tok:nth-child(n+4){transform:none}
+    .side{flex-wrap:wrap;row-gap:10px}
+    .side .tok{flex:0 0 30%}
+    .side .tok:nth-child(odd){margin-bottom:0}
     .body{width:44px;height:44px;font-size:16px}
     .boss .tok.e .body{width:84px;height:84px}
     .hb{width:60px}.boss .hb{width:150px}
@@ -184,6 +197,7 @@
       <span class="badge" id="bTurn"></span>
       <button class="toggle" id="speedBtn">빠르게</button>
       <button class="toggle" id="rulesBtn">규칙</button>
+      <button class="toggle" id="logBtn">전투 기록</button>
       <button class="toggle" id="menuBtn2">편성으로</button>
     </div>
   </header>
@@ -197,13 +211,13 @@
   <div class="skillbar" id="skillbar"></div>
 
   <div class="ctrl">
+    <div class="hint" id="hint"></div>
     <button class="btn ghost" id="autoWin">승률 자동 지정</button>
     <button class="btn ghost" id="autoDmg">피해량 자동 지정</button>
     <button class="btn ghost" id="autoBattle">오토 전투 끔</button>
     <button class="btn start" id="startBtn">START</button>
   </div>
-  <div class="hint" id="hint"></div>
-  <div class="log" id="log"></div>
+  <div class="log hidden" id="log"></div>
 </div>
 
 <!-- setup -->
@@ -457,19 +471,24 @@ function bindInspect(el, fn){
   ['touchend','touchmove','touchcancel'].forEach(ev => el.addEventListener(ev, () => clearTimeout(t), {passive:true}));
   el.addEventListener('contextmenu', e => e.preventDefault());
 }
+// fastest on the left, slowest on the right (both sides); out of action units go last
+const rankA = a => canAct(a) ? 100 + a.speed : alive(a) ? 50 : 0;
+const rankE = e => canAct(e) && e.slots.length ? 100 + Math.max(...e.slots.map(x => x.speed)) : alive(e) ? 50 : 0;
+const allyOrder = () => S.allies.map((_, i) => i).sort((x, y) => rankA(S.allies[y]) - rankA(S.allies[x]) || x - y);
+const enemyOrder = () => S.enemies.map((_, i) => i).sort((x, y) => rankE(S.enemies[y]) - rankE(S.enemies[x]) || x - y);
 function renderAll(){ renderStage(); renderBar(); renderTop(); renderCtrl(); requestAnimationFrame(drawArrows); }
 function renderStage(){
-  $('sideA').innerHTML = S.allies.map((a, ai) => `
+  $('sideA').innerHTML = allyOrder().map(ai => { const a = S.allies[ai]; return `
     <div class="tok a${alive(a) ? '' : ' dead'}${S.armed === ai ? ' armed' : ''}" id="u-a-${ai}" style="--c:${a.c}">
       <div class="chips"><div class="chip" id="ach-${ai}">${canAct(a) ? a.speed : '-'}</div></div>
       <div class="body">${a.name[0]}</div>
       <div class="tn">${a.name}${a.stag ? ' <span class="tag">흐트러짐</span>' : ''}</div>
       ${miniBar(a)}<div class="hpn">${a.hp}/${a.max}${a.shield ? ` <span class="shieldt">+${a.shield}</span>` : ''} · 정신력 ${a.sp >= 0 ? '+' : ''}${a.sp}</div>
-    </div>`).join('');
+    </div>`; }).join('');
   $('sideE').className = 'side e' + (S.type === 'focus' ? ' boss' : '');
   const pick = S.phase === 'plan' && S.type === 'focus' && S.armed !== null;
-  $('sideE').innerHTML = S.enemies.map((e, ei) => {
-    const chips = e.slots.map((s, si) => `<button class="chip e${hasUb(s.skill) ? ' ub' : ''}${pick ? ' pick' : ''}" id="sl-${ei}-${si}" data-e="${ei}" data-s="${si}" aria-label="${e.name} ${si + 1}번 슬롯 ${s.skill.name}">${s.speed}</button>`).join('');
+  $('sideE').innerHTML = enemyOrder().map(ei => { const e = S.enemies[ei];
+    const chips = e.slots.map((s, si) => ({s, si})).sort((x, y) => y.s.speed - x.s.speed || x.si - y.si).map(({s, si}) => `<button class="chip e${hasUb(s.skill) ? ' ub' : ''}${pick ? ' pick' : ''}" id="sl-${ei}-${si}" data-e="${ei}" data-s="${si}" aria-label="${e.name} ${si + 1}번 슬롯 ${s.skill.name}">${s.speed}</button>`).join('');
     return `<div class="tok e${alive(e) ? '' : ' dead'}" id="u-e-${ei}">
       <div class="chips">${chips || '<div class="chip none">-</div>'}</div>
       <div class="body">${e.name[0]}</div>
@@ -503,7 +522,7 @@ function targetText(a, ai){
 }
 function renderBar(){
   $('skillbar').style.setProperty('--n', S.allies.length);
-  $('skillbar').innerHTML = S.allies.map((a, ai) => {
+  $('skillbar').innerHTML = allyOrder().map(ai => { const a = S.allies[ai];
     let tiles;
     if (canAct(a)){
       tiles = optsOf(a).map((s, k) => {
@@ -514,7 +533,7 @@ function renderBar(){
           else w = `<span class="w o">일방</span>`;
         }
         return `<button class="tile${s.guard ? ' g' : ''}${a.choice === k ? ' sel' : ''}" data-a="${ai}" data-k="${k}" ${S.phase !== 'plan' ? 'disabled' : ''}>
-          <span class="tnm">${s.guard ? '가드' : s.name}</span>${w}
+          <span class="tnm"${s.guard ? ` data-g="${s.base}~${s.base + s.cp}"` : ''}>${s.guard ? '가드' : s.name}</span>${w}
           <span class="trg">${s.guard ? `보호막 ${s.base}~${s.base + s.cp}` : `위력 ${rng(s)}`}</span>
           ${s.guard ? '' : `<span class="dots">${'<i></i>'.repeat(s.coins)}</span>`}</button>`;
       }).join('');
@@ -540,8 +559,7 @@ function sideInfo(u, s, right, extra){
   return `<div class="si${right ? ' r' : ''}" style="${c}"><div class="un">${u.name}${u.nslots > 1 && extra ? '' : ''}</div>
     <div class="sn">${s.guard ? '가드' : s.name}</div>
     <div class="sm">기본 ${s.base} · 코인 +${s.cp} × ${s.coins} · ${s.guard ? '보호막' : '위력'} ${rng(s)}</div>
-    <div class="coins">${coinsHtml(s, right && isHard())}</div>
-    ${extra ? `<div class="sm" style="margin-top:4px">${extra}</div>` : ''}</div>`;
+    <div class="cr"><div class="coins">${coinsHtml(s, right && isHard())}</div>${extra ? `<div class="sm">${extra}</div>` : ''}</div></div>`;
 }
 const emptySide = (t, right) => `<div class="si empty${right ? ' r' : ''}">${t}</div>`;
 function verdictWin(r, sub){ return `<div class="verdict"><div class="lab">합 승률</div><div class="big ${cls(r)}">${Math.round(r * 100)}%</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`; }
@@ -559,11 +577,11 @@ function renderTop(){
     const s = optsOf(a)[I.k];
     L = sideInfo(a, s, false, `속도 ${a.speed} · 앞면 확률 ${Math.round(headP(a.sp) * 100)}%`);
     const t = a.target, e = t && S.enemies[t.e], slot = e && e.slots[t.s];
-    if (s.guard){ M = `<div class="verdict"><div class="lab">가드</div><div class="big" style="color:var(--shield)">${s.base}~${s.base + s.cp}</div><div class="sub">합 없이 보호막을 얻습니다</div></div>`; R = emptySide('합 대상 없음', true); }
+    if (s.guard){ M = `<div class="verdict"><div class="lab">가드</div><div class="big" style="color:var(--shield)">${s.base}~${s.base + s.cp}</div></div>`; R = emptySide('합 대상 없음', true); }
     else if (slot){
       R = sideInfo(e, slot.skill, true, `속도 ${slot.speed} · ${e.nslots > 1 ? (t.s + 1) + '번 슬롯 · ' : ''}노리는 대상 ${S.allies[slot.target].name}`);
-      if (isClashPair(I.ai, t)) M = verdictWin(winOf(I.ai, I.k), slot.target === I.ai ? '나를 노리는 슬롯' : '내가 더 빨라서 가로챔');
-      else M = `<div class="verdict"><div class="lab">일방 공격</div><div class="big" style="color:var(--muted)">–</div><div class="sub">이 슬롯은 ${S.allies[slot.target].name}을(를) 그대로 공격합니다</div></div>`;
+      if (isClashPair(I.ai, t)) M = verdictWin(winOf(I.ai, I.k));
+      else M = `<div class="verdict"><div class="lab">일방 공격</div><div class="big" style="color:var(--muted)">–</div></div>`;
     } else { M = `<div class="verdict"><div class="lab">대상 미지정</div></div>`; R = emptySide(S.type === 'focus' ? '적 속도 칩을 눌러 대상을 정하세요' : '대상 없음', true); }
   } else {
     const e = S.enemies[I.e], slot = e && e.slots[I.s];
@@ -575,10 +593,10 @@ function renderTop(){
     const cl = cand.find(x => isClashPair(x.ai, x.a.target));
     if (cl){
       L = sideInfo(cl.a, optsOf(cl.a)[cl.a.choice], false, `속도 ${cl.a.speed} · 앞면 확률 ${Math.round(headP(cl.a.sp) * 100)}%`);
-      M = verdictWin(winOf(cl.ai, cl.a.choice), `${cl.a.name}이(가) 합합니다`);
+      M = verdictWin(winOf(cl.ai, cl.a.choice));
     } else {
       L = emptySide(cand.length ? `${cand.map(x => x.a.name).join(', ')}이(가) 일방 공격만 합니다` : '이 슬롯과 합하는 아군이 없습니다');
-      M = `<div class="verdict"><div class="lab">합 없음</div><div class="big" style="color:var(--red)">!</div><div class="sub">${S.allies[slot.target].name}이(가) 일방 공격을 받습니다</div></div>`;
+      M = `<div class="verdict"><div class="lab">합 없음</div><div class="big" style="color:var(--red)">!</div></div>`;
     }
   }
   $('top').innerHTML = `<div class="duo">${L}${M}${R}</div>`;
@@ -601,7 +619,7 @@ function drawArrows(){
   if (S.phase !== 'plan'){ svg.innerHTML = ''; return; }
   const mk = (id, c, s) => `<marker id="${id}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="${s}" markerHeight="${s}" orient="auto"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker>`;
   let h = `<defs>${mk('mY','#e9b949',6)}${mk('mG','#a49eb4',6)}${mk('mR','#e5555a',5)}</defs>`;
-  const arc = (p, q, lift) => { const top = Math.min(p.y, q.y) - lift - Math.abs(p.x - q.x) * .08; return `M${p.x} ${p.y} C${p.x} ${top} ${q.x} ${top} ${q.x} ${q.y}`; };
+  const arc = (p, q, lift) => { const top = Math.max(2, Math.min(p.y, q.y) - lift - Math.abs(p.x - q.x) * .06); return `M${p.x} ${p.y} C${p.x} ${top} ${q.x} ${top} ${q.x} ${q.y}`; };
   // enemy intents: thin red, low arcs
   allSlots().forEach(({e, s, slot}) => {
     const se = $(`sl-${e}-${s}`), ae = $(`ach-${slot.target}`); if (!se || !ae) return;
@@ -614,7 +632,7 @@ function drawArrows(){
     const se = $(`sl-${a.target.e}-${a.target.s}`), ae = $(`ach-${ai}`); if (!se || !ae) return;
     const c = isClashPair(ai, a.target);
     const p = anchor(ae, rel), q = anchor(se, rel);
-    h += `<path d="${arc(p, q, 46)}" fill="none" stroke="${c ? '#e9b949' : '#a49eb4'}" stroke-width="${c ? 2.6 : 1.8}" ${c ? '' : 'stroke-dasharray="6 5"'} stroke-opacity="${ch ? 1 : .55}" marker-end="url(#${c ? 'mY' : 'mG'})"/>`;
+    h += `<path d="${arc(p, q, 30)}" fill="none" stroke="${c ? '#e9b949' : '#a49eb4'}" stroke-width="${c ? 2.6 : 1.8}" ${c ? '' : 'stroke-dasharray="6 5"'} stroke-opacity="${ch ? 1 : .55}" marker-end="url(#${c ? 'mY' : 'mG'})"/>`;
   });
   svg.innerHTML = h;
 }
@@ -855,6 +873,7 @@ $('rulesBtn').onclick = () => $('rulesOv').classList.remove('hidden');
 $('rulesClose').onclick = () => $('rulesOv').classList.add('hidden');
 const toMenu = () => { if (S && S.phase === 'exec') return; $('endOv').classList.add('hidden'); if (S) S.auto = false; $('setupOv').classList.remove('hidden'); };
 $('menuBtn').onclick = toMenu; $('menuBtn2').onclick = toMenu;
+$('logBtn').onclick = () => { const h = $('log').classList.toggle('hidden'); $('logBtn').classList.toggle('on', !h); $('log').scrollTop = 1e9; };
 $('againBtn').onclick = () => { $('endOv').classList.add('hidden'); newGame(); };
 window.__cc = {get S(){ return S; }, setSpeed:v => speed = v};
 }
