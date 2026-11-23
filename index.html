@@ -76,6 +76,9 @@
   .tok.e .body{border-radius:12px;background:radial-gradient(circle at 35% 30%,#fff5,transparent 45%),linear-gradient(150deg,#e46a63,#8f2638);color:#fff;
     clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
   .boss .tok.e .body{width:clamp(70px,15vh,124px);height:clamp(70px,15vh,124px);font-size:38px}
+  .tok.act .body{box-shadow:0 0 0 3px #fff,0 0 22px #ffffffaa}
+  .stage.busy .tok:not(.act){opacity:.55}
+  .stage.busy .tok.dead{opacity:.2}
   .tok.armed .body{box-shadow:0 0 0 3px var(--blue),0 8px 14px #0008}
   .tn{font-size:12px;font-weight:700;white-space:nowrap}
   .tag{font-size:10px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-weight:600}
@@ -425,6 +428,7 @@ function startTurn(){
     // every enemy is staggered: attacks become one-sided on a living enemy
     S.allies.forEach(a => { if (canAct(a)){ const ei = S.enemies.findIndex(alive); a.target = {e:ei, s:0}; } });
   }
+  S.aOrd = allyOrder(); S.eOrd = enemyOrder();
   log(`<span class="t">── 턴 ${S.turn} ──</span>`);
   renderAll();
   if (S.auto) setTimeout(() => { if (S && S.phase === 'plan' && S.auto){ autoAssign('win'); go(); } }, 500 * speed);
@@ -478,8 +482,8 @@ const allyOrder = () => S.allies.map((_, i) => i).sort((x, y) => rankA(S.allies[
 const enemyOrder = () => S.enemies.map((_, i) => i).sort((x, y) => rankE(S.enemies[y]) - rankE(S.enemies[x]) || x - y);
 function renderAll(){ renderStage(); renderBar(); renderTop(); renderCtrl(); requestAnimationFrame(drawArrows); }
 function renderStage(){
-  $('sideA').innerHTML = allyOrder().map(ai => { const a = S.allies[ai]; return `
-    <div class="tok a${alive(a) ? '' : ' dead'}${S.armed === ai ? ' armed' : ''}" id="u-a-${ai}" style="--c:${a.c}">
+  $('sideA').innerHTML = (S.aOrd || allyOrder()).map(ai => { const a = S.allies[ai]; return `
+    <div class="tok a${alive(a) ? '' : ' dead'}${S.armed === ai ? ' armed' : ''}${S.cur && S.cur.a === a ? ' act' : ''}" id="u-a-${ai}" style="--c:${a.c}">
       <div class="chips"><div class="chip" id="ach-${ai}">${canAct(a) ? a.speed : '-'}</div></div>
       <div class="body">${a.name[0]}</div>
       <div class="tn">${a.name}${a.stag ? ' <span class="tag">흐트러짐</span>' : ''}</div>
@@ -487,9 +491,9 @@ function renderStage(){
     </div>`; }).join('');
   $('sideE').className = 'side e' + (S.type === 'focus' ? ' boss' : '');
   const pick = S.phase === 'plan' && S.type === 'focus' && S.armed !== null;
-  $('sideE').innerHTML = enemyOrder().map(ei => { const e = S.enemies[ei];
+  $('sideE').innerHTML = (S.eOrd || enemyOrder()).map(ei => { const e = S.enemies[ei];
     const chips = e.slots.map((s, si) => ({s, si})).sort((x, y) => y.s.speed - x.s.speed || x.si - y.si).map(({s, si}) => `<button class="chip e${hasUb(s.skill) ? ' ub' : ''}${pick ? ' pick' : ''}" id="sl-${ei}-${si}" data-e="${ei}" data-s="${si}" aria-label="${e.name} ${si + 1}번 슬롯 ${s.skill.name}">${s.speed}</button>`).join('');
-    return `<div class="tok e${alive(e) ? '' : ' dead'}" id="u-e-${ei}">
+    return `<div class="tok e${alive(e) ? '' : ' dead'}${S.cur && S.cur.e === e ? ' act' : ''}" id="u-e-${ei}">
       <div class="chips">${chips || '<div class="chip none">-</div>'}</div>
       <div class="body">${e.name[0]}</div>
       <div class="tn">${e.name}${e.stag ? ' <span class="tag">흐트러짐</span>' : ''}</div>
@@ -522,7 +526,7 @@ function targetText(a, ai){
 }
 function renderBar(){
   $('skillbar').style.setProperty('--n', S.allies.length);
-  $('skillbar').innerHTML = allyOrder().map(ai => { const a = S.allies[ai];
+  $('skillbar').innerHTML = (S.aOrd || allyOrder()).map(ai => { const a = S.allies[ai];
     let tiles;
     if (canAct(a)){
       tiles = optsOf(a).map((s, k) => {
@@ -728,6 +732,7 @@ async function hitWith(att, sk, count, mult, target, els, offset){
 
 async function doClash(a, ask, e, slot){
   const es = slot.skill, ubOn = isHard();
+  S.cur = {a, e}; refreshBars();
   midClash({name:a.name, c:a.c, sk:`${ask.name} · ${rng(ask)}`}, {name:e.name, sk:`${es.name} · ${rng(es)}`});
   const L = setCoins('cL', ask), R = setCoins('cR', es, ubOn);
   const ac = Array.from({length:ask.coins}, () => ({gone:false}));
@@ -756,7 +761,6 @@ async function doClash(a, ask, e, slot){
     log(`<span class="good">${a.name} 합 승리</span> (${n}회)`);
     const aOff = ac.findIndex(c => !c.gone);
     L.forEach((el, k) => { if (k >= aOff){ el.className = 'coin'; el.textContent = ''; } });
-    await sleep(300);
     await hitWith(a, ask, ac.length - aOff, mult, e, L, aOff);
     const cracked = ec.filter(c => c.ub);
     if (cracked.length && alive(a)){
@@ -781,7 +785,6 @@ async function doClash(a, ask, e, slot){
     log(`<span class="bad">${a.name} 합 패배</span> (${n}회)`);
     const eOff = ec.findIndex(c => !c.gone);
     R.forEach((el, k) => { if (k >= eOff){ el.className = 'coin' + (ec[k].ub ? ' ub' : ''); el.textContent = ec[k].ub ? '!' : ''; } });
-    await sleep(300);
     await hitWith(e, es, ec.length - eOff, mult, a, R, eOff);
   }
   await sleep(250);
@@ -789,6 +792,7 @@ async function doClash(a, ask, e, slot){
 
 async function oneSided(att, sk, target){
   S.st.oneSided++;
+  S.cur = att.side === 'a' ? {a:att, e:target} : {a:target, e:att}; refreshBars();
   if (att.side === 'a') midClash({name:att.name, c:att.c, sk:`${sk.name} · 일방 공격`}, {name:target.name, sk:''});
   else midClash({name:target.name, c:target.c, sk:''}, {name:att.name, sk:`${sk.name} · 일방 공격`});
   const els = setCoins(att.side === 'a' ? 'cL' : 'cR', sk, att.side === 'e' && isHard());
@@ -803,7 +807,7 @@ const randAlive = list => { const l = list.filter(alive); return l.length ? l[ri
 
 async function go(){
   if (S.phase !== 'plan') return;
-  S.phase = 'exec'; S.armed = null; S.inspect = null; renderAll();
+  S.phase = 'exec'; S.armed = null; S.inspect = null; S.cur = null; $('stage').classList.add('busy'); renderAll();
   const acts = [], claimed = new Set();
   // guards first
   for (const a of S.allies){
@@ -827,16 +831,17 @@ async function go(){
     if (act.type === 'clash'){
       const aOk = canAct(act.a), eOk = canAct(act.e);
       if (aOk && eOk) await doClash(act.a, act.s, act.e, act.slot);
-      else if (aOk && !eOk){ const t = alive(act.e) ? act.e : randAlive(S.enemies); if (t) await oneSided(act.a, act.s, t); }
-      else if (!aOk && eOk){ const t = alive(S.allies[act.slot.target]) ? S.allies[act.slot.target] : randAlive(S.allies); if (t) await oneSided(act.e, act.slot.skill, t); }
+      else if (aOk && !eOk){ if (alive(act.e)) await oneSided(act.a, act.s, act.e); else log(`<span class="t">${act.e.name}이(가) 이미 쓰러져 ${act.a.name}의 공격 취소</span>`); }
+      else if (!aOk && eOk){ const t = S.allies[act.slot.target]; if (alive(t)) await oneSided(act.e, act.slot.skill, t); }
     } else if (act.type === 'ally'){
       if (!canAct(act.a)) continue;
-      const t = alive(act.e) ? act.e : randAlive(S.enemies); if (t) await oneSided(act.a, act.s, t);
+      if (alive(act.e)) await oneSided(act.a, act.s, act.e); else log(`<span class="t">${act.e.name}이(가) 이미 쓰러져 ${act.a.name}의 공격 취소</span>`);
     } else {
       if (!canAct(act.e)) continue;
-      const t = alive(S.allies[act.slot.target]) ? S.allies[act.slot.target] : randAlive(S.allies); if (t) await oneSided(act.e, act.slot.skill, t);
+      const t = S.allies[act.slot.target]; if (alive(t)) await oneSided(act.e, act.slot.skill, t);
     }
   }
+  S.cur = null; $('stage').classList.remove('busy');
   if (await checkEnd()) return;
   for (const u of [...S.allies, ...S.enemies]) if (u.stag > 0){ u.stag--; if (!u.stag && alive(u)) log(`<span class="t">${u.name} 흐트러짐 회복</span>`); }
   await sleep(300);
